@@ -20,6 +20,8 @@ router.post('/', upload.single('file'), async (req, res) => {
     if (!req.file || !req.file.path) {
         return res.status(400).json({ msg: "No se ha subido ningún archivo o ha ocurrido un error al subir el archivo." });
     }
+    
+    
     try {
         console.log(req.file.path);
         const uploadResponse = await cloudinary.uploader.upload(req.file.path, {

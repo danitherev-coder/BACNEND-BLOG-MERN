@@ -15,7 +15,7 @@ const Post = new Schema({
         ref: 'Usuario',
         required: true
     },
-    categoria: {
+    cat: {
         type: String,
         required: true
     },

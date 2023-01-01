@@ -17,7 +17,7 @@ router.post('/crear-post', [
     body('titulo', 'El titulo es obligatorio').not().isEmpty(),
     body('desc', 'El contenido es obligatorio').not().isEmpty(),
     body('img', 'La imagen es obligatoria').not().isEmpty(),
-    body('categoria', 'La categoria es obligatoria').not().isEmpty(),
+    body('cat', 'La cat es obligatoria').not().isEmpty(),
     validarCampos
 ], createPost)
 router.put('/editar-post/:id', [
@@ -27,7 +27,7 @@ router.put('/editar-post/:id', [
     body('titulo', 'El titulo es obligatorio').not().isEmpty(),
     body('desc', 'El contenido es obligatorio').not().isEmpty(),
     // body('img', 'La imagen es obligatoria').not().isEmpty(),
-    body('categoria', 'La categoria es obligatoria').not().isEmpty(),
+    body('cat', 'La cat es obligatoria').not().isEmpty(),
     validarCampos
 ], editPost)
 router.delete('/eliminar-post/:id', [

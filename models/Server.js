@@ -7,6 +7,8 @@ const userRoutes = require('../routes/usersRoutes')
 const uploadRoutes = require('../routes/uploadRoutes')
 const cors = require('cors')
 const dbConnection = require('../config/db')
+const maxRequestSize = "50mb"
+
 
 class Server {
     constructor() {
@@ -28,8 +30,8 @@ class Server {
 
     middlewares() {
         this.app.use(cors())
-        this.app.use(express.json())
-        this.app.use(express.urlencoded({ extended: true }))
+        this.app.use(express.urlencoded({ limit: maxRequestSize, extended: true }));
+        this.app.use(express.json({ limit: maxRequestSize }));
     }
     routes() {
         this.app.use(this.paths.auth, authRoutes)

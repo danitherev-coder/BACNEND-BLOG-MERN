@@ -13,20 +13,20 @@ const traerUsuarios = async (req = request, res = response) => {
             .limit(Number(limite))
     ])
 
-    res.json({ total, usuarios })
+    res.json(usuarios)
 }
 
 const traerUsuario = async (req = request, res = response) => {
     const { id } = req.params
     const usuario = await Usuario.findById(id)
-    res.json({ message: 'Usuario encontrado con exito', usuario })
+    res.json(usuario)
 }
 
 const crearUser = async (req = request, res = response) => {
     const { nombre, email, password } = req.body
     const existeEmail = await Usuario.findOne({ email })
     if (existeEmail) {
-        return res.status(400).json({ message: 'El email ya esta registrado' })
+        return res.status(400).json({ msg: 'El email ya esta registrado' })
     }
 
     // si no esta registrado el email, entonces crear usuario
@@ -39,7 +39,7 @@ const crearUser = async (req = request, res = response) => {
     usuario.password = bcryptjs.hashSync(password, salt)
 
     await usuario.save()
-    res.json({ message: 'Usuario creado con exito', usuario })
+    res.json(usuario)
 }
 
 const actualizarUser = async (req = request, res = response) => {
