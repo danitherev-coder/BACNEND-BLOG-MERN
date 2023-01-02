@@ -1,7 +1,7 @@
 const { request, response } = require("express")
 const Usuario = require("../models/Usuario")
 const bcryptjs = require('bcryptjs')
-
+const cloudinary = require('cloudinary').v2;
 
 
 const traerUsuarios = async (req = request, res = response) => {
@@ -42,6 +42,20 @@ const crearUser = async (req = request, res = response) => {
     res.json(usuario)
 }
 
+
+// obtener la imagen de cloudinary
+const deleteImg = (imagePublicId) => {
+    return new Promise((resolve, reject) => {
+        cloudinary.uploader.destroy(imagePublicId, (error, result) => {
+            if (error) {
+                reject(error);
+            } else {
+                resolve({ result, msg: 'Imagen eliminada' });
+            }
+        });
+    });
+};
+
 const actualizarUser = async (req = request, res = response) => {
     const { id } = req.params
     const { _id, password, google, email, ...resto } = req.body
@@ -50,9 +64,25 @@ const actualizarUser = async (req = request, res = response) => {
         resto.password = bcryptjs.hashSync(password, salt)
     }
 
+    const UserImg = await Usuario.findById(id)
+    if (!req.body.img) {
+         let resto = UserImg.img
+        return resto
+    }
+
+    if (UserImg.img) {
+        const imagePublicId = UserImg.img
+        try {
+            await deleteImg(imagePublicId);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     const usuario = await Usuario.findByIdAndUpdate(id, resto, { new: true })
     res.json({ message: 'Usuario actualizado con exito', usuario })
 }
+
 
 const borrarUser = async (req = request, res = response) => {
     const { id } = req.params

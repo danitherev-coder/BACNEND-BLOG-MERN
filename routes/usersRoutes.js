@@ -22,7 +22,7 @@ router.put('/actualizar-user/:id', [
     param('id').custom(existeIDUSER),
     body('nombre', 'El nombre no debe estar vacio').not().isEmpty(),
     body('email', 'El email no parece valido').isEmail(),
-    body('password', 'El password debe tener al menos 6 caracteres').isLength({ min: 6 }),
+    // body('password', 'El password debe tener al menos 6 caracteres').isLength({ min: 6 }),
     validarCampos
 ], actualizarUser)
 router.delete('/borrar-user/:id', [
