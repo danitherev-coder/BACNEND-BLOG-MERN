@@ -2,21 +2,6 @@ const { request, response } = require("express")
 const Post = require("../models/Post")
 const cloudinary = require('cloudinary').v2;
 
-// const posts = async (req = request, res = response) => {
-//     const { desde = 0, limite = 5 } = req.query
-//     const [total, posts] = await Promise.all([
-//         Post.countDocuments(),
-//         Post.find()
-//             .populate('autor')
-//             .skip(Number(desde))
-//             .limit(Number(limite))
-//     ])
-//     // res.json({
-//     //     total,
-//     //     posts
-//     // })
-//     res.json(posts)
-// }
 
 const posts = async (req, res) => {
     const page = req.query.page || 1;
@@ -42,7 +27,7 @@ const posts = async (req, res) => {
 
 const post = async (req = request, res = response) => {
     const { id } = req.params
-    const post = await Post.findById(id).populate('autor', 'nombre')
+    const post = await Post.findById(id).populate('autor')
     res.json(post)
 }
 
@@ -75,8 +60,13 @@ const editPost = async (req = request, res = response) => {
     if (!img) {
         let img = postImg.img;
         return img
-    } 
-
+    }
+    // si el usuario que inicio sesion no es el autor, entonces no puede editar el post
+    if (postImg.autor.toString() !== req.usuario.id) {
+        return res.status(401).json({
+            msg: 'Usted no es el autor del post, por lo cual no puede editar esta entrada'
+        })
+    }
     const post = await Post.findByIdAndUpdate(id, {
         titulo,
         desc,
